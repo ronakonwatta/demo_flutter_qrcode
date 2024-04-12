@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart'; // Step 1: Import the image_picker package
 
 void main() => runApp(const App());
 
@@ -54,6 +55,12 @@ class _AppState extends State<App> {
               icon: const Icon(Icons.camera),
               tooltip: 'Scan',
               onPressed: _scan,
+            ),
+            // Step 3: Add a new IconButton in the AppBar actions
+            IconButton(
+              icon: const Icon(Icons.image),
+              tooltip: 'Pick Image',
+              onPressed: pickImage,
             ),
           ],
         ),
@@ -255,6 +262,19 @@ class _AppState extends State<App> {
               : 'Unknown error: $e',
         );
       });
+    }
+  }
+
+  // Step 2: Create a function to handle image picking
+  Future<void> pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // Use the image file
+      print('Image path: ${image.path}');
+    } else {
+      print('No image selected.');
     }
   }
 }
