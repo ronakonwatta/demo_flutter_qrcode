@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:io' show Platform;
+import 'dart:io' show File, Platform;
 
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart'; // Step 1: Import the image_picker package
+import 'package:scan/scan.dart';
 
 void main() => runApp(const App());
 
@@ -265,7 +266,7 @@ class _AppState extends State<App> {
     }
   }
 
-  // Step 2: Create a function to handle image picking
+// Step 2: Create a function to handle image picking
   Future<void> pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -273,6 +274,8 @@ class _AppState extends State<App> {
     if (image != null) {
       // Use the image file
       print('Image path: ${image.path}');
+      String? result = image.path != null ? await Scan.parse(image.path) : null;
+      setState(() => scanResult = ScanResult(rawContent: result ?? ''));
     } else {
       print('No image selected.');
     }
